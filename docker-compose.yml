@@ -1,0 +1,50 @@
+version: '3'
+
+networks:
+  vps-network:
+    external: true
+
+services:
+  php_service:
+    container_name: php_cont
+    build:
+      dockerfile: Dockerfile
+      context: ./php_dockerfile
+    hostname: php
+    restart: always
+    networks:
+      - vps-network
+    volumes:
+      - ./sites:/home/sites
+
+  httpd_service:
+    container_name: httpd_cont
+    image: 'httpd:latest'
+    hostname: httpd
+    restart: always
+    networks:
+      - vps-network
+    volumes:
+      - ./sites:/home/sites
+      - ./httpd_conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./httpd_conf/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+    ports:
+      - '80:80'
+      - '433:433'
+
+  mysql_service:
+    container_name: mysql_cont
+    image: 'mysql:latest'
+    hostname: mysql
+    restart: always
+    networks:
+      - vps-network
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./mysql_conf/mysql.cnf:/etc/mysql/my.cnf
+      - ./mysql_conf/low-memory-my.cnf:/etc/mysql/conf.d/low-memory-my.cnf
+    environment:
+      - MYSQL_ROOT_PASSWORD=Abc123321
+      - MYSQL_DATABASE=db_test
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=Abc123321

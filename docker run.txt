@@ -1,0 +1,5 @@
+docker container run -d --name php -v /home/vunguyen/Downloads/VPS/LAMP/sites:/home/sites --network www-net php:7.4-fpm
+
+docker container run -d --name httpd --network www-net -h httpd -p 8080:80 -p 443:443 -v /home/vunguyen/Downloads/VPS/LAMP/sites:/home/sites -v  /home/vunguyen/Downloads/VPS/LAMP/httpd_conf/httpd.conf:/usr/local/apache2/conf/httpd.conf httpd:latest
+
+docker container run -d --name mysql -e MYSQL_ROOT_PASSWORD=Abc123321 -v /home/vunguyen/Downloads/VPS/LAMP/mysql_conf/mysql.cnf:/etc/mysql/conf.d/my.cnf -v  /home/vunguyen/Downloads/VPS/LAMP/mysql_data:/var/lib/mysql --network www-net mysql:latest
